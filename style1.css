@@ -1,0 +1,259 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
+
+#nav { /*menu*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #333;
+    margin: 0;
+    padding: 15px;
+    list-style: none;
+    border-radius: 0 0 10px 0;
+    box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+    #nav a {
+        display: block;
+        padding: 10px 7px;
+        color: #fff;
+        font-family: 'Quicksand', sans-serif;
+    }
+
+        #nav a:hover {
+            color: #9FC2CB;
+        }
+
+.section { /*section 크기 지정*/
+    height: 1000px;
+    padding: 30px 160px;
+}
+
+#section-1 {
+    background: #7a7378;
+}
+
+#section-2 {
+    background: linear-gradient(120deg, #7A7378, #3d3b3e);
+}
+
+#section-3 {
+    background: #3D3B3E;
+}
+
+#section-4 {
+    background: #3D3B3E;
+}
+
+.a_2 { /*메인페이지에 start 버튼*/
+    color: #D7E9EE;
+    bottom: 20px;
+    left: 50%;
+    z-index: 2;
+    display: inline-block;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    color: #D7E9EE;
+    font: normal 400 100px/1;
+    font-size: 30px;
+    font-family: 'MuseoModerno', cursive;
+    letter-spacing: .1em;
+    text-decoration: none;
+    transition: opacity .3s;
+}
+
+.a_3 { /*back to main 버튼*/
+    color: #9fc2cb;
+    bottom: 20px;
+    left: 50%;
+    z-index: 2;
+    display: inline-block;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    color: #9fc2cb;
+    font: normal 400 20px/1 'Josefin Sans', sans-serif;
+    letter-spacing: .1em;
+    text-decoration: none;
+    transition: opacity .3s;
+}
+
+
+.a_1 { /*url, file 버튼*/
+    display: block;
+    width: 220px;
+    height: 70px;
+    z-index: 1;
+}
+
+    .a_1:after { /*내가 네모얌><*/
+        content: "";
+        background: linear-gradient(120deg, #FFFFFF, #7A7378, #ffffff);
+        background-size: 400% 400%;
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 4px 66px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+        -moz-animation: gradient 3s ease-in-out infinite, border 1s forwards ease-in-out reverse;
+        -webkit-animation: gradient 3s ease-in-out infinite, border 1s forwards ease-in-out reverse;
+        animation: gradient 3s ease-in-out infinite, border 1s forwards ease-in-out reverse;
+    }
+
+    .a_1 > span {
+        display: block;
+        background: linear-gradient(120deg, #ffffff, #7A7378, #ffffff);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        -moz-animation: gradient 3s ease-in-out infinite;
+        -webkit-animation: gradient 3s ease-in-out infinite;
+        animation: gradient 3s ease-in-out infinite;
+    }
+
+    /* helpers */
+    .absolute-centering, .a_1, .a_1:after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
+.text-formatting, .a_1 {
+    position: relative;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    letter-spacing: 2px;
+    line-height: 70px;
+    font-family: "Squada One", cursive;
+    font-size: 28px;
+}
+
+
+.container { /*url, file 버튼 중간으로 보내려고*/
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.item {
+}
+
+
+/* motion */
+@-moz-keyframes gradient {
+    0% {
+        background-position: 14% 0%;
+    }
+
+    50% {
+        background-position: 87% 100%;
+    }
+
+    100% {
+        background-position: 14% 0%;
+    }
+}
+
+@-webkit-keyframes gradient {
+    0% {
+        background-position: 14% 0%;
+    }
+
+    50% {
+        background-position: 87% 100%;
+    }
+
+    100% {
+        background-position: 14% 0%;
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 14% 0%;
+    }
+
+    50% {
+        background-position: 87% 100%;
+    }
+
+    100% {
+        background-position: 14% 0%;
+    }
+}
+
+@-moz-keyframes border {
+    0% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 4px 66px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    25% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 216px 66px, 216px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    50% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 100% 0%, 0% 0%);
+    }
+
+    75% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%);
+    }
+
+    100% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%);
+    }
+}
+
+@-webkit-keyframes border {
+    0% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 4px 66px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    25% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 216px 66px, 216px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    50% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 100% 0%, 0% 0%);
+    }
+
+    75% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%);
+    }
+
+    100% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%);
+    }
+}
+
+@keyframes border {
+    0% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 4px 66px, 4px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    25% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 66px, 216px 66px, 216px 100%, 100% 100%, 100% 0%, 0% 0%);
+    }
+
+    50% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 216px 4px, 100% 0%, 0% 0%);
+    }
+
+    75% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 4px, 4px 0%, 0% 0%);
+    }
+
+    100% {
+        -webkit-clip-path: polygon(0% 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 4px 100%, 0% 100%);
+    }
+}
