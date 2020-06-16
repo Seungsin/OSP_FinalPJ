@@ -7,6 +7,7 @@ import sys
 import re
 import requests
 import operator
+import time
 import Analysis # 웹사이트 분석 함수
 
 first_python = Flask(__name__)
@@ -51,10 +52,13 @@ def getKeywords():
         url = request.args.get('url')
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
+        start = time.time()
         tf_idf = Analysis.es.get(index='web', id=url)
-        Keywords = sorted(tf_idf['_source']['TF-IDF'].items(), reverse=True, key=operator.itemgetter(1))
         
-        return render_template('Keywords.html', keywords = Keywords[0:10])
+        Keywords = sorted(tf_idf['_source']['TF-IDF'].items(), reverse=True, key=operator.itemgetter(1))
+        end = time.time()
+        
+        return render_template('Keywords.html', keywords = Keywords[0:10], proc_time = end-start)
 
 @first_python.route('/getSimilar', methods=['GET'])
 def getSimilar():
@@ -65,17 +69,20 @@ def getSimilar():
         similarity = []
         urf_data = Analysis.es.search(index='web', body={'query':{'match_all':{}}})
         data = urf_data['hits']['hits']
+        
+        start = time.time()
         for target in data:
                 if url == target['_source']['URL']:
                         continue
                 similarity.append((target['_source']['URL'], Analysis.cos_sim(url, target['_source']['URL'])))
         similarity = sorted(similarity, key=operator.itemgetter(1), reverse=True)
+        end = time.time()
         
         if(len(similarity) < 3):
-                return render_template("Similar.html", similars = similarity)
+                return render_template("Similar.html", similars = similarity, proc_time = end-start)
         
         else:
-                return render_template("Similar.html", similars = similarity[:3])
+                return render_template("Similar.html", similars = similarity[:3], proc_time = end-start)
         
 if __name__ == '__main__':
         first_python.run(host='127.0.0.1', port=8000, debug=True)
