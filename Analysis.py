@@ -1,19 +1,22 @@
-#!/usr/bin/python
-
 import sys
-import re 
+import re
 import requests
 import operator
 import numpy
+import copy
 from bs4 import BeautifulSoup
 from math import log
+from elasticsearch import Elasticsearch
 
-WORD = {}
-TF = {}
-IDF = {}
-TF_IDF = {}
+es = Elasticsearch('localhost:9200', timeout=30)
 
 def wordFreq(url):
+        try:
+                res = es.get(index='web', id=url)
+                return res['_source']['WORDFREQ']
+        except:
+                print('Data does not exist.')
+                        
         res = requests.get(url)
         html = BeautifulSoup(res.content, 'html.parser')
 
@@ -30,76 +33,123 @@ def wordFreq(url):
                                 wordfreq[word] += 1
                         else:
                                 wordfreq[word] = 1
-
-        WORD[url] = list(wordfreq.items())
-        WORD[url].sort()
         
         return wordfreq
 
-def find_tf(url, wordfreq):
+def getTF(wordfreq):
         tf = {}
         
         soc = 0.0
         for count in wordfreq.values():
                 soc += count
-                
+
         for word, count in wordfreq.items():
-                tf[word] = count / soc
-                        
-        TF[url] = tf
+                tf[word] = count/soc
 
-def find_idf(url, wordfreq):
+        return tf
+
+def update():
+        try:
+                urf_idf = es.get(index='idf', id='idf')
+                idf = urf_idf['_source']
+
+                urf_data = es.search(index='web', body={'query':{'match_all':{}}})
+                data = urf_data['hits']['hits']
+
+                count = es.get(index='idf', id='idf')
+                for web in data:
+                        tf = getTF(web['_source']['WORDFREQ'])
+                        tf_idf = {}
+                        for word, tf_v in tf.items():
+                                tf_idf[word] = tf_v * (log(count['_version']/idf[word]))
+                                
+                        data = {
+                                'URL' : web['_source']['URL'],
+                                'TF-IDF' : tf_idf,
+                                'WORDFREQ' : web['_source']['WORDFREQ']
+                                }
+                        es.index(index='web', id=web['_source']['URL'], body=data)
+
+        except:
+                print('An error occurred while updating...')
+
+def getIDF(wordfreq):
+        try:
+                res = es.get(index='idf', id='idf')
+                idf = res['_source']
+        except: 
+                idf = {}
         for word in wordfreq.keys():
-                if word in IDF.keys():
-                        IDF[word] += 1
+                if word in idf.keys():
+                        idf[word] += 1
                 else:
-                        IDF[word] = 1
+                        idf[word] = 1
 
+        data = idf
+        es.index(index='idf', id='idf', body=data)
 
-def tf_idf_update():
-        for url in TF_IDF.keys():
-                for word, tf in TF[url].items():
-                        TF_IDF[url][word] = tf * (log(len(TF)/IDF[word]))
-
-
+        update()
+        
+        return idf
 
 def tf_idf(url):
-        if url in TF_IDF.keys():
-                return
+        try:
+                res = es.get(index='web', id=url)
+                return res['_source']['TF-IDF']
+        except:
+                print('Data does not exist.')
+        
         wordfreq = wordFreq(url)
-        find_tf(url, wordfreq)
-        find_idf(url, wordfreq)
-        
-        tf_idf = {}
-        
-        for word, tf in TF[url].items():
-                tf_idf[word] = tf * (log(len(TF)/IDF[word]))
-                        
-        TF_IDF[url] = tf_idf
+        tf = getTF(wordfreq)
+        idf = getIDF(wordfreq)
 
-        tf_idf_update()
+        tf_idf = {}
+
+        count = es.get(index='idf', id='idf')
+        for word, tf_v in tf.items():
+                tf_idf[word] = tf_v * (log(count['_version']/idf[word]))
+
+        data = {
+                'URL' : url,
+                'TF-IDF' : tf_idf,
+                'WORDFREQ' : wordfreq
+                }
+        es.index(index='web', id=url, body=data)
         
-def word_update():
-        for wordfreq in WORD.values():
-                worddict = dict(wordfreq)
-                for word in IDF.keys():
-                        if word not in worddict:
-                                wordfreq.append((word, 0))
-                wordfreq.sort()
+        return tf_idf
 
 def cos_sim(url1, url2):
-        if url1 not in WORD.keys():
-                print('''You must do 'tf_idf' first to 'do cos_similarity''''')
-                return
-        if url2 not in WORD.keys():
-                print('''You must do 'tf_idf' first to 'do cos_similarity''''')
-                return
-        word_update()
+        try:
+                res = es.get(index='cos_sim', id=url1)
+                cos_sim = res['_source'][url2]
+                return cos_sim
+        except:
+                print('Data does not exist.')
+                
+        target1 = es.get(index='web', id=url1)
+        target2 = es.get(index='web', id=url2)
+        t1 = copy.deepcopy(target1['_source']['WORDFREQ'])
+        t2 = copy.deepcopy(target2['_source']['WORDFREQ'])
+        for word in t1.keys():
+                if word not in t2.keys():
+                        t2[word] = 0
+        for word in t2.keys():
+                if word not in t1.keys():
+                        t1[word] = 0
+        w1 = sorted(list(t1.items()))
+        w2 = sorted(list(t2.items()))
+        n1 = numpy.array(list(dict(w1).values()))
+        n2 = numpy.array(list(dict(w2).values()))
 
-        target1 = numpy.array(list(dict(WORD[url1]).values()))
-        target2 = numpy.array(list(dict(WORD[url2]).values()))
-        
-        dotprod = numpy.dot(target1, target2)
-        cos_sim = float(dotprod / (numpy.linalg.norm(target1) * numpy.linalg.norm(target2)))
+        dotprod = numpy.dot(n1, n2)
+        cos_sim = float(dotprod / (numpy.linalg.norm(n1) * numpy.linalg.norm(n2)))
+
+        try:
+                urf_data = es.get(index='cos_sim', id=url1)
+                data = urf_data['_source']
+                data[url2] = cos_sim
+        except: 
+                data = { url2 : cos_sim }
+        es.index(index='cos_sim', id=url1, body=data)
 
         return cos_sim
