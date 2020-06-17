@@ -69,6 +69,7 @@ def update():
                                 'WORDFREQ' : web['_source']['WORDFREQ']
                                 }
                         es.index(index='web', id=web['_source']['URL'], body=data)
+                es.indices.refresh(index='web')
 
         except:
                 print('An error occurred while updating...')
@@ -87,6 +88,7 @@ def getIDF(wordfreq):
 
         data = idf
         es.index(index='idf', id='idf', body=data)
+        es.indices.refresh(index='idf')
 
         update()
         
@@ -115,6 +117,7 @@ def tf_idf(url):
                 'WORDFREQ' : wordfreq
                 }
         es.index(index='web', id=url, body=data)
+        es.indices.refresh(index='web')
         
         return tf_idf
 
@@ -151,5 +154,6 @@ def cos_sim(url1, url2):
         except: 
                 data = { url2 : cos_sim }
         es.index(index='cos_sim', id=url1, body=data)
+        es.indices.refresh(index='cos_sim')
 
         return cos_sim
