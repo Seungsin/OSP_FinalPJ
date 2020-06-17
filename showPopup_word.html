@@ -1,0 +1,88 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="popup_style1.css">
+</head>
+<body>
+    <div id="demo">
+        <h1>Top 10 Key Words List</h1>
+        <h2>{{URL}}</h2>
+        <h2>processing time : {{proc_time}}</h2>
+        <!-- Responsive table starts here -->
+        <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+        <div class="table-responsive-vertical shadow-z-1">
+            <!-- Table starts here -->
+            <table id="table" class="table table-hover table-mc-light-blue">
+                <thead>
+                    <tr>
+                        <th>Word</th>
+                        <th>Frequency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[0]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[0]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[1]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[1]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[2]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[2]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[3]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[3]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[4]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[4]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[5]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[5]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[6]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[6]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[7]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[7]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[8]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[8]}}</td>
+                    </tr>
+                    <tr>
+                        <td data-title="Word">
+                            <p>{{keywords[9]}}</p>
+                        </td>
+                        <td data-title="Frequency">{{freq[9]}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
+</html>
