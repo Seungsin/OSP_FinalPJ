@@ -11,10 +11,19 @@ import time
 import Analysis # 웹사이트 분석 함수
 
 first_python = Flask(__name__)
+Analysis.es.indices.delete(index='*')
 
 @first_python.route('/')
 def index():
-        return render_template('HTMLPage1.html')
+        try:
+                url_list = []
+                urf_data = Analysis.es.search(index='web', body={'query':{'match_all':{}}})
+                data = urf_data['hits']['hits']
+                for url in data:
+                        url_list.append(url['_source']['URL'])
+                return render_template('HTMLPage1.html', urls = url_list)
+        except:
+                return render_template('HTMLPage1.html')
 
 @first_python.route('/osp_final', methods=['GET', 'POST'])
 def upload_file():
