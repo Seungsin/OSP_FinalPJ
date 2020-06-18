@@ -23,7 +23,7 @@ def index():
                         url_list.append(url['_source']['URL'])
                 return render_template('HTMLPage1.html', urls = url_list)
         except:
-                return render_template('HTMLPage1.html')
+                return render_template('main.html')
 
 @first_python.route('/osp_final', methods=['GET', 'POST'])
 def upload_file():
@@ -34,16 +34,17 @@ def upload_file():
                 url_list = []
                 while True:
                         url = fp.readline()
+                        url = url.replace("\n", "")
                         if url == "":
                                 break
                         url_list.append(url) 
                 for url in url_list:
                         Analysis.tf_idf(url)
 
-                return render_template('HTMLPage1.html', urls = url_list)
+                return render_template('Analysis_result_main.html', urls = url_list)
         
         else:
-                u = request.args.get('url')
+                u = request.args.get('search')
                 u = u.replace("%3A", ":")
                 u = u.replace("%2F", "/")
                 Analysis.tf_idf(u)
@@ -53,8 +54,8 @@ def upload_file():
                 data = urf_data['hits']['hits']
                 for url in data:
                         url_list.append(url['_source']['URL'])
-                
-                return render_template('HTMLPage1.html', urls = url_list)
+
+                return render_template('Analysis_result_main.html', urls = url_list)
         
 @first_python.route('/getKeywords', methods=['GET'])
 def getKeywords():
@@ -67,7 +68,7 @@ def getKeywords():
         Keywords = sorted(tf_idf['_source']['TF-IDF'].items(), reverse=True, key=operator.itemgetter(1))
         end = time.time()
         
-        return render_template('Keywords.html', keywords = Keywords[0:10], proc_time = end-start)
+        return render_template('showPopup_word.html', keywords = Keywords[0:10], proc_time = end-start)
 
 @first_python.route('/getSimilar', methods=['GET'])
 def getSimilar():
@@ -88,10 +89,10 @@ def getSimilar():
         end = time.time()
         
         if(len(similarity) < 3):
-                return render_template("Similar.html", similars = similarity, proc_time = end-start)
+                return render_template("showPopup_site.html", similars = similarity, proc_time = end-start)
         
         else:
-                return render_template("Similar.html", similars = similarity[:3], proc_time = end-start)
+                return render_template("showPopup_site.html", similars = similarity[:3], proc_time = end-start)
         
 if __name__ == '__main__':
         first_python.run(host='127.0.0.1', port=8000, debug=True)
