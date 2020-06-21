@@ -57,9 +57,9 @@ def upload_file():
 
                 return render_template('Analysis_result_main.html', urls = url_list)
         
-@first_python.route('/getKeywords', methods=['GET'])
+@first_python.route('/getKeywords', methods=['POST'])
 def getKeywords():
-        url = request.args.get('url')
+        url = request.form['url']
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
         start = time.time()
@@ -70,9 +70,9 @@ def getKeywords():
         
         return render_template('showPopup_word.html', keywords = Keywords[0:10], proc_time = end-start)
 
-@first_python.route('/getSimilar', methods=['GET'])
+@first_python.route('/getSimilar', methods=['POST'])
 def getSimilar():
-        url = request.args.get('url')
+        url = request.form['url']
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
 
