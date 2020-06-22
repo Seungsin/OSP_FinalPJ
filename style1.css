@@ -1,4 +1,4 @@
-html, body {
+﻿html, body {
     margin: 0;
     padding: 0;
 }
@@ -36,6 +36,7 @@ html, body {
 .section { /*section 크기 지정*/
     height: 1000px;
     padding: 30px 160px;
+    overflow: hidden;
 }
 
 #section-1 {
