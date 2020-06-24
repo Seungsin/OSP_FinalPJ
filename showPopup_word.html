@@ -1,6 +1,6 @@
-﻿<html>
+<html>
 <head>
-    <link rel="stylesheet" type="text/css" href="popup_style1.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='popup_style1.css')}}">
 </head>
 <body>
     <div id="demo">
@@ -14,75 +14,33 @@
             <table id="table" class="table table-hover table-mc-light-blue">
                 <thead>
                     <tr>
+            <th>ID</th>
                         <th>Word</th>
                         <th>Frequency</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[0]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[0]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[1]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[1]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[2]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[2]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[3]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[3]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[4]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[4]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[5]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[5]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[6]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[6]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[7]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[7]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[8]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[8]}}</td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{keywords[9]}}</p>
-                        </td>
-                        <td data-title="Frequency">{{freq[9]}}</td>
-                    </tr>
+
+                    {% for keyword in keywords %}
+
+                        {% set index = keywords.index(keyword) + 1 %}
+
+                        <tr>
+
+                        <td data-title="ID">{{index}}</td>
+
+                        <td data-title="Word">{{keyword[0]}}</td>
+
+
+                        </tr>
+
+                    {%endfor%}
+                   
                 </tbody>
+
             </table>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </body>
-</html>
+</html> 
