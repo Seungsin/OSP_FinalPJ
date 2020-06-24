@@ -13,6 +13,8 @@ import Analysis # 웹사이트 분석 함수
 first_python = Flask(__name__)
 Analysis.es.indices.delete(index='*')
 
+data_list = []
+
 @first_python.route('/')
 def index():
         try:
@@ -37,62 +39,83 @@ def upload_file():
                         url = url.replace("\n", "")
                         if url == "":
                                 break
-                        url_list.append(url) 
+                        flag = True
+                        for data in data_list:
+                                if url == data['url']:
+                                        flag = False # 중복 url 존재
+                                        break
+                        if flag:
+                                url_list.append(url)
                 for url in url_list:
-                        Analysis.tf_idf(url)
-
-                return render_template('Analysis_result_main.html', urls = url_list)
+                        start = time.time()
+                        wordfreq = Analysis.upload(url)
+                        cnt = 0
+                        for c in wordfreq.values():
+                                cnt += c
+                        end = time.time()
+                        data_list.append({
+                                'url' : url,
+                                'time' : end - start,
+                                'word' : cnt })
+                
+                return render_template('Analysis_result_main.html', datas = data_list)
         
         else:
-                u = request.args.get('search')
-                u = u.replace("%3A", ":")
-                u = u.replace("%2F", "/")
-                Analysis.tf_idf(u)
+                url = request.args.get('search')
+                url = url.replace("%3A", ":")
+                url = url.replace("%2F", "/")
 
-                url_list = []
-                urf_data = Analysis.es.search(index='web', body={'query':{'match_all':{}}})
-                data = urf_data['hits']['hits']
-                for url in data:
-                        url_list.append(url['_source']['URL'])
+                for data in data_list:
+                        if url == data['url']:
+                                return # 중복 url 존재
+                
+                start = time.time()
+                wordfreq = Analysis.upload(url)
+                cnt = 0
+                for c in wordfreq.values():
+                        cnt += c
+                end = time.time()
+                proc_time = end - start
 
-                return render_template('Analysis_result_main.html', urls = url_list)
+                data_list.append({
+                        'url' : url,
+                        'time' : proc_time,
+                        'word' : cnt })        
+
+                return render_template('Analysis_result_main.html', datas = data_list)
         
 @first_python.route('/getKeywords', methods=['POST'])
 def getKeywords():
-        url = request.form['url']
+        url = request.form['urlName']
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
-        start = time.time()
-        tf_idf = Analysis.es.get(index='web', id=url)
+        print(url)
+        tf_idf = Analysis.tf_idf(url)
+        Keywords = sorted(tf_idf.items(), reverse=True, key=operator.itemgetter(1))
         
-        Keywords = sorted(tf_idf['_source']['TF-IDF'].items(), reverse=True, key=operator.itemgetter(1))
-        end = time.time()
-        
-        return render_template('showPopup_word.html', keywords = Keywords[0:10], proc_time = end-start)
+        return render_template('showPopup_word.html', keywords = Keywords[0:10])
 
 @first_python.route('/getSimilar', methods=['POST'])
 def getSimilar():
-        url = request.form['url']
+        url = request.form['urlName']
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
-
+        print(url)
         similarity = []
-        urf_data = Analysis.es.search(index='web', body={'query':{'match_all':{}}})
+        urf_data = Analysis.es.search(index='word_freq', body={'query':{'match_all':{}}})
         data = urf_data['hits']['hits']
         
-        start = time.time()
         for target in data:
-                if url == target['_source']['URL']:
+                if url == target['_id']:
                         continue
-                similarity.append((target['_source']['URL'], Analysis.cos_sim(url, target['_source']['URL'])))
+                similarity.append((target['_id'], Analysis.cos_sim(url, target['_id'])))
         similarity = sorted(similarity, key=operator.itemgetter(1), reverse=True)
-        end = time.time()
         
         if(len(similarity) < 3):
-                return render_template("showPopup_site.html", similars = similarity, proc_time = end-start)
+                return render_template("showPopup_site.html", similars = similarity)
         
         else:
-                return render_template("showPopup_site.html", similars = similarity[:3], proc_time = end-start)
+                return render_template("showPopup_site.html", similars = similarity[:3])
         
 if __name__ == '__main__':
         first_python.run(host='127.0.0.1', port=8000, debug=True)
