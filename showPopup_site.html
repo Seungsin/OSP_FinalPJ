@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='popup_style1.css')}}">
 </head>
@@ -6,7 +6,7 @@
     <div id="demo">
         <h1>Most similar top3 url list</h1>
         <h2>{{URL}}</h2>
-        <h2>processing time : {{proc_time}}</h2>
+        
         <!-- Responsive table starts here -->
         <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
         <div class="table-responsive-vertical shadow-z-1">
@@ -14,25 +14,27 @@
             <table id="table" class="table table-hover table-mc-light-blue">
                 <thead>
                     <tr>
-            <th>ID</th>
+			<th>ID</th>
                         <th>URL</th>
-                        <th>Frequency</th>
+			<th>COS Similarity</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
 
-                    {% for url in similarity %}
+                    {% for url in similars %}
 
-                        {% set index = similarity.index(url) + 1 %}
+                        {% set index = similars.index(url) + 1 %}
 
                         <tr>
 
                         <td data-title="ID">{{index}}</td>
 
-                        <td data-title="Word">{{url}}</td>
+                        <td data-title="URL">{{url[0]}}</td>
 
+			<td data-title="COS Similarity">{{url[1]}}</td>
 
-                        </tr>
+                    	</tr>
 
                     {%endfor%}
             </table>
@@ -40,4 +42,4 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </body>
-</html> 
+</html>
