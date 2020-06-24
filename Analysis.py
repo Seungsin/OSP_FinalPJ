@@ -12,15 +12,33 @@ es = Elasticsearch('localhost:9200', timeout=30)
 
 def wordFreq(url):
         try:
-                res = es.get(index='web', id=url)
-                return res['_source']['WORDFREQ']
+                res = es.get(index='word_freq', id=url)
+                return res['_source']
         except:
                 print('Data does not exist.')
                         
         res = requests.get(url)
         html = BeautifulSoup(res.content, 'html.parser')
 
-        contents = html.find_all('a') # 검색할 tag
+
+        p = html.find_all('p')
+        a = html.find_all('a')
+        li = html.find_all('li')
+        h1 = html.find_all('h1')
+        h2 = html.find_all('h2')
+        h3 = html.find_all('h3')
+        h4 = html.find_all('h4')
+        h5 = html.find_all('h5')
+
+        contents = []
+        contents.extend(p)
+        contents.extend(a)
+        contents.extend(li)
+        contents.extend(h1)
+        contents.extend(h2)
+        contents.extend(h3)
+        contents.extend(h4)
+        contents.extend(h5)
 
         wordfreq = {}
         for content in contents:
@@ -33,6 +51,9 @@ def wordFreq(url):
                                 wordfreq[word] += 1
                         else:
                                 wordfreq[word] = 1
+
+        es.index(index='word_freq', id=url, body=wordfreq)
+        es.indices.refresh(index='word_freq')
         
         return wordfreq
 
@@ -53,24 +74,17 @@ def update():
                 urf_idf = es.get(index='idf', id='idf')
                 idf = urf_idf['_source']
 
-                urf_data = es.search(index='web', body={'query':{'match_all':{}}})
+                urf_data = es.search(index='word_freq', body={'query':{'match_all':{}}})
                 data = urf_data['hits']['hits']
-
-                count = es.get(index='idf', id='idf')
                 for web in data:
-                        tf = getTF(web['_source']['WORDFREQ'])
+                        tf = getTF(web['_source'])
                         tf_idf = {}
                         for word, tf_v in tf.items():
-                                tf_idf[word] = tf_v * (log(count['_version']/idf[word]))
-                                
-                        data = {
-                                'URL' : web['_source']['URL'],
-                                'TF-IDF' : tf_idf,
-                                'WORDFREQ' : web['_source']['WORDFREQ']
-                                }
-                        es.index(index='web', id=web['_source']['URL'], body=data)
-                es.indices.refresh(index='web')
+                                tf_idf[word] = tf_v * (log(urf_idf['_version']/idf[word]))
+                        es.index(index='tf_idf', id=web['_id'], body=tf_idf)
 
+                es.indices.refresh(index='tf_idf')
+                
         except:
                 print('An error occurred while updating...')
 
@@ -86,24 +100,25 @@ def getIDF(wordfreq):
                 else:
                         idf[word] = 1
 
-        data = idf
-        es.index(index='idf', id='idf', body=data)
+        es.index(index='idf', id='idf', body=idf)
         es.indices.refresh(index='idf')
 
         update()
-        
+
         return idf
 
 def tf_idf(url):
         try:
-                res = es.get(index='web', id=url)
-                return res['_source']['TF-IDF']
+                res = es.get(index='tf_idf', id=url)
+                return res['_source']
         except:
                 print('Data does not exist.')
-        
-        wordfreq = wordFreq(url)
+
+        get = es.get(index='word_freq', id=url)
+        wordfreq = get['_source']
         tf = getTF(wordfreq)
-        idf = getIDF(wordfreq)
+        urf_idf = es.get(index='idf', id='idf')
+        idf = urf_idf['_source']
 
         tf_idf = {}
 
@@ -111,13 +126,8 @@ def tf_idf(url):
         for word, tf_v in tf.items():
                 tf_idf[word] = tf_v * (log(count['_version']/idf[word]))
 
-        data = {
-                'URL' : url,
-                'TF-IDF' : tf_idf,
-                'WORDFREQ' : wordfreq
-                }
-        es.index(index='web', id=url, body=data)
-        es.indices.refresh(index='web')
+        es.index(index='tf_idf', id=url, body=tf_idf)
+        es.indices.refresh(index='tf_idf')
         
         return tf_idf
 
@@ -129,10 +139,10 @@ def cos_sim(url1, url2):
         except:
                 print('Data does not exist.')
                 
-        target1 = es.get(index='web', id=url1)
-        target2 = es.get(index='web', id=url2)
-        t1 = copy.deepcopy(target1['_source']['WORDFREQ'])
-        t2 = copy.deepcopy(target2['_source']['WORDFREQ'])
+        target1 = es.get(index='word_freq', id=url1)
+        target2 = es.get(index='word_freq', id=url2)
+        t1 = copy.deepcopy(target1['_source'])
+        t2 = copy.deepcopy(target2['_source'])
         for word in t1.keys():
                 if word not in t2.keys():
                         t2[word] = 0
@@ -157,3 +167,10 @@ def cos_sim(url1, url2):
         es.indices.refresh(index='cos_sim')
 
         return cos_sim
+
+
+def upload(url):
+        wordfreq = wordFreq(url)
+        getIDF(wordfreq)
+
+        return wordfreq
