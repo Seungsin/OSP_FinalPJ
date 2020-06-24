@@ -16,30 +16,21 @@ def wordFreq(url):
                 return res['_source']
         except:
                 print('Data does not exist.')
-                        
-        res = requests.get(url)
-        html = BeautifulSoup(res.content, 'html.parser')
 
-
-        p = html.find_all('p')
-        a = html.find_all('a')
-        li = html.find_all('li')
-        h1 = html.find_all('h1')
-        h2 = html.find_all('h2')
-        h3 = html.find_all('h3')
-        h4 = html.find_all('h4')
-        h5 = html.find_all('h5')
+        try:       
+                res = requests.get(url)
+                html = BeautifulSoup(res.content, 'html.parser')
+        except:
+                return -1
 
         contents = []
-        contents.extend(p)
-        contents.extend(a)
-        contents.extend(li)
-        contents.extend(h1)
-        contents.extend(h2)
-        contents.extend(h3)
-        contents.extend(h4)
-        contents.extend(h5)
+        tags = ['p', 'a', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
+        for tag in tags:
+                contents.extend(html.find_all(tag))
 
+        if len(contents) == 0:
+                return -1
+        
         wordfreq = {}
         for content in contents:
                 content = content.text.lower()
@@ -51,7 +42,7 @@ def wordFreq(url):
                                 wordfreq[word] += 1
                         else:
                                 wordfreq[word] = 1
-
+        
         es.index(index='word_freq', id=url, body=wordfreq)
         es.indices.refresh(index='word_freq')
         
@@ -171,6 +162,8 @@ def cos_sim(url1, url2):
 
 def upload(url):
         wordfreq = wordFreq(url)
+        if wordfreq == -1:
+                return -1
         getIDF(wordfreq)
 
         return wordfreq
