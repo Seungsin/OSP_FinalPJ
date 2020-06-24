@@ -1,6 +1,6 @@
-﻿<html>
+<html>
 <head>
-    <link rel="stylesheet" type="text/css" href="popup_style1.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='popup_style1.css')}}">
 </head>
 <body>
     <div id="demo">
@@ -14,29 +14,30 @@
             <table id="table" class="table table-hover table-mc-light-blue">
                 <thead>
                     <tr>
+            <th>ID</th>
                         <th>URL</th>
+                        <th>Frequency</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{similarity[0]}}</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{similarity[1]}}</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-title="Word">
-                            <p>{{similarity[2]}}</p>
-                        </td>
-                    </tr>
-                </tbody>
+
+                    {% for url in similarity %}
+
+                        {% set index = similarity.index(url) + 1 %}
+
+                        <tr>
+
+                        <td data-title="ID">{{index}}</td>
+
+                        <td data-title="Word">{{url}}</td>
+
+
+                        </tr>
+
+                    {%endfor%}
             </table>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </body>
-</html>
+</html> 
