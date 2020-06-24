@@ -4,7 +4,7 @@
 </head>
 <body>
     <div id="demo">
-        <h1>Most similar top3 url list</h1>
+        <h1>Top 10 Key Words List</h1>
         <h2>{{URL}}</h2>
         
         <!-- Responsive table starts here -->
@@ -15,28 +15,31 @@
                 <thead>
                     <tr>
 			<th>ID</th>
-                        <th>URL</th>
-			<th>COS Similarity</th>
-                        
+                        <th>Word</th>
+                        <th>TF-IDF</th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    {% for url in similars %}
+                    {% for keyword in keywords %}
 
-                        {% set index = similars.index(url) + 1 %}
+                        {% set index = keywords.index(keyword) + 1 %}
 
                         <tr>
 
                         <td data-title="ID">{{index}}</td>
 
-                        <td data-title="URL">{{url[0]}}</td>
+                        <td data-title="Word">{{keyword[0]}}</td>
+			
+			<td data-title="TF-IDF">{{keyword[1]}}</td>
 
-			<td data-title="COS Similarity">{{url[1]}}</td>
 
                     	</tr>
 
                     {%endfor%}
+                    
+                </tbody>
+
             </table>
         </div>
     </div>
