@@ -78,7 +78,7 @@ def upload_file():
                 for data in data_list:
                         if url == data['url']:
                                 data['status'] = 'Repeated'
-                                return # 중복 url 존재
+                                return render_template('Analysis_result_main.html', datas = data_list) # 중복 url 존재
                 
                 start = time.time()
                 wordfreq = Analysis.upload(url)
