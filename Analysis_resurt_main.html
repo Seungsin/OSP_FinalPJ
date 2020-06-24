@@ -10,8 +10,8 @@
 
     <script language="javascript">
 
-        function showPopup_site() {
-       var urlInput = document.getElementById("urlname").value;
+        function showPopup_site(i) {
+       var urlInput = document.getElementById("urlname"+i).value;
            var frm = document.createElement("form");
        frm.setAttribute("action", "/getSimilar");
        frm.setAttribute("target","site_ana");
@@ -28,8 +28,8 @@
 
 
 
-        function showPopup_word() {
-       var urlInput = document.getElementById("urlname").value;
+        function showPopup_word(i) {
+       var urlInput = document.getElementById("urlname"+i).value;
            var frm = document.createElement("form");
        frm.setAttribute("action", "/getKeywords");
        frm.setAttribute("target","word_ana");
@@ -83,9 +83,9 @@
                         <td data-title="Time">{{url['time']}}</td>
                         <td data-title="Status">{{url['status']}}</td>
                         <td data-title="Analysis">
-                            <input type='hidden' id='urlname' value={{url}}>
-                            <input type="button" class="btn btn-site" onclick="showPopup_word()" value="Word">
-                            <input type="button" class="btn btn-site" onclick="showPopup_site()" value="Site">
+                            <input type='hidden' id='urlname{{index}}' value={{url['url']}}>
+                            <input type="button" class="btn btn-site" onclick="showPopup_word({{index}})" value="Word">
+                            <input type="button" class="btn btn-site" onclick="showPopup_site({{index}})" value="Site">
                         </td>
                     </tr>
                     {%endfor%}
