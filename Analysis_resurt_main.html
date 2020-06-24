@@ -6,16 +6,15 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="Table_style1.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- 우분투에서는 href={{url_for('static',filename='Table_style1.css')}}" 로 바꿔야함 -->
     <script language="javascript">
-        function showPopup_site() { window.open("08_2_popup.html", "a", "width=400, height=300, left=100, top=50"); } //팝업창 뜨게 구현
-        function showPopup_word() { window.open("08_2_popup.html", "a", "width=400, height=300, left=100, top=50"); } //팝업창 뜨게 구현
+
     </script>
 </head>
 <body>
     <div id="demo">
         <h1>Analysis Result</h1>
         <h2>You can add url by clicking the search icon.</h2>
-   
         <form action="./osp_final" method="get" class="search-bar">
             <input type="search" name="search" id="searchbtn" pattern=".*\S.*" required>
             <button class="search-btn" type="submit">
@@ -30,7 +29,6 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
                         <th>Link</th>
                         <th>Number of word</th>
                         <th>Time</th>
@@ -38,10 +36,43 @@
                         <th>Analysis</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody> <!--url이 추가될 때마다 테이블 수가 늘어날 수 있도록 for문으로 구현-->
+                    {% for url in urls %} 
+                    {% set index = urls.index(url) + 1 %}
+                    <tr>
+                        <td data-title="ID">{{index}}</td>
+                        <td data-title="Link">{{url}}</td>
+                        <td data-title="Number of word">                        </td>
+                        <td data-title="Time"></td> <!--어디서 갖고와야할까용?-->
+                        <td data-title="Status">
+                            {% set count = 0 %}
+                            {% for url2 in urls %}
+                            {% if url == url2 %}
+                            {% count = count + 1 %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if count > 2 %}
+                            Overlap <!--같은 url이 여러개 있으므로 중복-->
+                            {% elif count == 1 %}
+                            Success <!--url이 하나 밖에 없으므로 성공-->
+                            {% elif count == 0 %}
+                            Fail <!--url이 없으므로 실패-->
+                            {% endif %}
+                        </td> <!--어디서 갖고와야할까용?-->
+                        <td data-title="Analysis">
+                            <button type="button" class="btn btn-word"> <!--팝업창 구현 후 수정하기-->
+                                <span>Word</span>
+                            </button>
+                            <button type="button" class="btn btn-site">
+                                <span>Site</span>
+                            </button>
+                        </td>
+                    </tr>
+                    {%endfor%}
+
+                    <!--여기는 예시로 만들어놓은곳, 나중에 표 만들때 헷갈릴까봐!-->
                     <tr>
                         <td data-title="ID">1</td>
-                        <td data-title="Name">ONE</td>
                         <td data-title="Link">
                             <a href="https://github.com/zavoloklom/material-design-color-palette" target="_blank">GitHub</a>
                         </td>
@@ -49,113 +80,15 @@
                         <td data-title="Time"></td>
                         <td data-title="Status"></td>
                         <td data-title="Analysis">
-                            <button type="button" class="btn btn-word" onclick="showPopup_word();">
+
+                            <button type="button" class="btn btn-word" onclick="showPopup_word({{url}});">
                                 <span>Word</span>
                             </button>
-                            <button type="button" class="btn btn-site" onclick="showPopup_site()">
+                            <button type="button" class="btn btn-site" onclick="showPopup_site({{url}});">
                                 <span>Site</span>
                             </button>
                         </td>
 
-                    </tr>
-                    <tr>
-                        <td data-title="ID">2</td>
-                        <td data-title="Name">TWO</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/uqCsB" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">3</td>
-                        <td data-title="Name">THREE</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/eNaEBM" target="_blank">Codepen</a>
-                            <a href="https://github.com/zavoloklom/material-design-hierarchical-display" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">4</td>
-                        <td data-title="Name">FOUR</td>
-                        <td data-title="Link"><a href="https://codepen.io/zavoloklom/pen/dIgco" target="_blank">URL</a></td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">5</td>
-                        <td data-title="Name">FIVE</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/wtApI" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">6</td>
-                        <td data-title="Name">SIX</td>
-                        <td data-title="Link">
-                            <a href="https://github.com/zavoloklom/material-design-typography" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">7</td>
-                        <td data-title="Name">SEVEN</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/Gubja" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">8</td>
-                        <td data-title="Name">EIGHT</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/yaozl" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-                    </tr>
-                    <tr>
-                        <td data-title="ID">9</td>
-                        <td data-title="Name">NINE</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/qEVqzx" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis"></td>
-
-                    </tr>
-                    <tr>
-                        <td data-title="ID">10</td>
-                        <td data-title="Name">TEN</td>
-                        <td data-title="Link">
-                            <a href="https://codepen.io/zavoloklom/pen/Jbrho" target="_blank">URL</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis" style="text-align: center;"></td>
                     </tr>
                 </tbody>
             </table>
