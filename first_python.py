@@ -42,6 +42,7 @@ def upload_file():
                         flag = True
                         for data in data_list:
                                 if url == data['url']:
+                                        data['status'] = 'Repeated'
                                         flag = False # 중복 url 존재
                                         break
                         if flag:
@@ -49,6 +50,14 @@ def upload_file():
                 for url in url_list:
                         start = time.time()
                         wordfreq = Analysis.upload(url)
+                        if wordfreq == -1: # 크롤링 실패
+                                data_list.append({
+                                        'url' : url,
+                                        'time' : -1,
+                                        'word' : -1,
+                                        'status' : 'Fail' })
+                                continue
+                        
                         cnt = 0
                         for c in wordfreq.values():
                                 cnt += c
@@ -56,7 +65,8 @@ def upload_file():
                         data_list.append({
                                 'url' : url,
                                 'time' : end - start,
-                                'word' : cnt })
+                                'word' : cnt,
+                                'status' : 'Success' })
                 
                 return render_template('Analysis_result_main.html', datas = data_list)
         
@@ -67,10 +77,19 @@ def upload_file():
 
                 for data in data_list:
                         if url == data['url']:
+                                data['status'] = 'Repeated'
                                 return # 중복 url 존재
                 
                 start = time.time()
                 wordfreq = Analysis.upload(url)
+                if wordfreq == -1: # 크롤링 실패
+                        data_list.append({
+                                'url' : url,
+                                'time' : -1,
+                                'word' : -1,
+                                'status' : 'Fail' })
+                        return render_template('Analysis_result_main.html', datas = data_list)
+                        
                 cnt = 0
                 for c in wordfreq.values():
                         cnt += c
@@ -80,7 +99,8 @@ def upload_file():
                 data_list.append({
                         'url' : url,
                         'time' : proc_time,
-                        'word' : cnt })        
+                        'word' : cnt ,
+                        'status' : 'Success' })        
 
                 return render_template('Analysis_result_main.html', datas = data_list)
         
@@ -118,4 +138,4 @@ def getSimilar():
                 return render_template("showPopup_site.html", similars = similarity[:3])
         
 if __name__ == '__main__':
-        first_python.run(host='127.0.0.1', port=8000, debug=True)
+        first_python.run(host='127.0.0.1', port=5000, debug=True)
