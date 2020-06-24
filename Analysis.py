@@ -11,6 +11,8 @@ from elasticsearch import Elasticsearch
 es = Elasticsearch('localhost:9200', timeout=30)
 
 def wordFreq(url):
+        print(url)
+        
         try:
                 res = es.get(index='word_freq', id=url)
                 return res['_source']
@@ -28,6 +30,9 @@ def wordFreq(url):
         for tag in tags:
                 contents.extend(html.find_all(tag))
 
+        for content in contents:
+                print(content.keys() + '\n\n')
+        
         if len(contents) == 0:
                 return -1
         
