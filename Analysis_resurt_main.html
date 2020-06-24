@@ -7,9 +7,49 @@
     <link rel="stylesheet" type="text/css" href="Table_style1.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <!-- 우분투에서는 href={{url_for('static',filename='Table_style1.css')}}" 로 바꿔야함 -->
-    <script language="javascript">
+        <script language="javascript">
+
+        function showPopup_site() {
+       var urlInput = document.getElementById("urlname").value;
+           var frm = document.createElement("form");
+       frm.setAttribute("action", "/getSimilar");
+       frm.setAttribute("target","site_ana");
+       frm.setAttribute("method", "post");
+           document.body.appendChild(frm);
+       var formInput1=document.createElement("input");
+       formInput1.setAttribute("type", "hidden");
+       formInput1.setAttribute("name", "urlName");
+       formInput1.setAttribute("value", urlInput);
+       frm.appendChild(formInput1);
+            window.open("", "site_ana", "width=400, height=300, left=100, top=50");
+        frm.submit();
+        }
+
+ 
+
+        function showPopup_word() {
+       var urlInput = document.getElementById("urlname").value;
+           var frm = document.createElement("form");
+       frm.setAttribute("action", "/getKeywords");
+       frm.setAttribute("target","word_ana");
+       frm.setAttribute("method", "post");
+       document.body.appendChild(frm);
+       var formInput1=document.createElement("input");
+       formInput1.setAttribute("type", "hidden");
+       formInput1.setAttribute("name", "urlName");
+       formInput1.setAttribute("value", urlInput);
+       frm.appendChild(formInput1);
+
+       window.open('', "word_ana", "width=400, height=300, left=100, top=50");
+       frm.submit();
+
+   
+    } //팝업창 뜨게 구현
+
+ 
 
     </script>
+
 </head>
 <body>
     <div id="demo">
@@ -81,12 +121,10 @@
                         <td data-title="Status"></td>
                         <td data-title="Analysis">
 
-                            <button type="button" class="btn btn-word" onclick="showPopup_word({{url}});">
-                                <span>Word</span>
-                            </button>
-                            <button type="button" class="btn btn-site" onclick="showPopup_site({{url}});">
-                                <span>Site</span>
-                            </button>
+                            <input type='hidden' id='urlname' value={{url}}>
+                            <input type="button" class="btn btn-site" onclick="showPopup_word()" value="Word">
+                            <input type="button" class="btn btn-site" onclick="showPopup_site()" value = "Site">
+
                         </td>
 
                     </tr>
