@@ -5,9 +5,10 @@
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" type="text/css" href="Table_style1.css">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <!-- 우분투에서는 href={{url_for('static',filename='Table_style1.css')}}" 로 바꿔야함 -->
-        <script language="javascript">
+    <!--<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">-->
+    <!-- 우분투에서는 < href={{url_for('static',filename='Table_style1.css')}}" 로 바꿔야함 -->
+
+    <script language="javascript">
 
         function showPopup_site() {
        var urlInput = document.getElementById("urlname").value;
@@ -25,7 +26,7 @@
         frm.submit();
         }
 
- 
+
 
         function showPopup_word() {
        var urlInput = document.getElementById("urlname").value;
@@ -43,10 +44,10 @@
        window.open('', "word_ana", "width=400, height=300, left=100, top=50");
        frm.submit();
 
-   
+
     } //팝업창 뜨게 구현
 
- 
+
 
     </script>
 
@@ -77,57 +78,21 @@
                     </tr>
                 </thead>
                 <tbody> <!--url이 추가될 때마다 테이블 수가 늘어날 수 있도록 for문으로 구현-->
-                    {% for url in urls %} 
-                    {% set index = urls.index(url) + 1 %}
+                    {% for url in datas %} 
+                    {% set index = datas.index(url) %}
                     <tr>
-                        <td data-title="ID">{{index}}</td>
-                        <td data-title="Link">{{url}}</td>
-                        <td data-title="Number of word">                        </td>
-                        <td data-title="Time"></td> <!--어디서 갖고와야할까용?-->
-                        <td data-title="Status">
-                            {% set count = 0 %}
-                            {% for url2 in urls %}
-                            {% if url == url2 %}
-                            {% count = count + 1 %}
-                            {% endif %}
-                            {% endfor %}
-                            {% if count > 2 %}
-                            Overlap <!--같은 url이 여러개 있으므로 중복-->
-                            {% elif count == 1 %}
-                            Success <!--url이 하나 밖에 없으므로 성공-->
-                            {% elif count == 0 %}
-                            Fail <!--url이 없으므로 실패-->
-                            {% endif %}
-                        </td> <!--어디서 갖고와야할까용?-->
+                        <td data-title="ID">{{index + 1}}</td>
+                        <td data-title="Link">{{url['urls']}}</td>
+                        <td data-title="Number of word">{{url['word']}}</td>
+                        <td data-title="Time">{{url['time']}}</td>
+                        <td data-title="Status">{{url['status']}}</td>
                         <td data-title="Analysis">
-                            <button type="button" class="btn btn-word"> <!--팝업창 구현 후 수정하기-->
-                                <span>Word</span>
-                            </button>
-                            <button type="button" class="btn btn-site">
-                                <span>Site</span>
-                            </button>
+                            <input type='hidden' id='urlname' value={{url}}>
+                            <input type="button" class="btn btn-site" onclick="showPopup_word()" value="Word">
+                            <input type="button" class="btn btn-site" onclick="showPopup_site()" value="Site">
                         </td>
                     </tr>
                     {%endfor%}
-
-                    <!--여기는 예시로 만들어놓은곳, 나중에 표 만들때 헷갈릴까봐!-->
-                    <tr>
-                        <td data-title="ID">1</td>
-                        <td data-title="Link">
-                            <a href="https://github.com/zavoloklom/material-design-color-palette" target="_blank">GitHub</a>
-                        </td>
-                        <td data-title="Number of word"></td>
-                        <td data-title="Time"></td>
-                        <td data-title="Status"></td>
-                        <td data-title="Analysis">
-
-                            <input type='hidden' id='urlname' value={{url}}>
-                            <input type="button" class="btn btn-site" onclick="showPopup_word()" value="Word">
-                            <input type="button" class="btn btn-site" onclick="showPopup_site()" value = "Site">
-
-                        </td>
-
-                    </tr>
                 </tbody>
             </table>
         </div>
