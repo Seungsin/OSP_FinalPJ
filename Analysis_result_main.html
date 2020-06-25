@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <!--<link rel="stylesheet" type="text/css" href="Table_style1.css">-->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='Table_style1.css')}}">
+
+    <script language="javascript">
+
+        function showPopup_site(i) {
+       var urlInput = document.getElementById("urlname"+i).value;
+           var frm = document.createElement("form");
+       frm.setAttribute("action", "/getSimilar");
+       frm.setAttribute("target","site_ana");
+       frm.setAttribute("method", "post");
+           document.body.appendChild(frm);
+       var formInput1=document.createElement("input");
+       formInput1.setAttribute("type", "hidden");
+       formInput1.setAttribute("name", "urlName");
+       formInput1.setAttribute("value", urlInput);
+       frm.appendChild(formInput1);
+            window.open("", "site_ana", "width=800, height=300, left=100, top=50");
+        frm.submit();
+        }
+
+
+
+        function showPopup_word(i) {
+       var urlInput = document.getElementById("urlname"+i).value;
+           var frm = document.createElement("form");
+       frm.setAttribute("action", "/getKeywords");
+       frm.setAttribute("target","word_ana");
+       frm.setAttribute("method", "post");
+       document.body.appendChild(frm);
+       var formInput1=document.createElement("input");
+       formInput1.setAttribute("type", "hidden");
+       formInput1.setAttribute("name", "urlName");
+       formInput1.setAttribute("value", urlInput);
+       frm.appendChild(formInput1);
+
+       window.open('', "word_ana", "width=800, height=300, left=100, top=50");
+       frm.submit();
+
+
+    } //팝업창 뜨게 구현
+    </script>
+</head>
+<body>
+    <div id="demo">
+        <h1>Analysis Result</h1>
+        <h2>You can add url by clicking the search icon.</h2>
+        <form action="./osp_final" method="get" class="search-bar">
+            <input type="search" name="search" id="searchbtn" pattern=".*\S.*" required>
+            <button class="search-btn" type="submit">
+                <span>Search</span>
+            </button>
+        </form>
+        <!-- Responsive table starts here -->
+        <!-- For correct display on small screens you must add 'data-title' to each 'td' in your table -->
+        <div class="table-responsive-vertical shadow-z-1">
+            <!-- Table starts here -->
+            <table id="table" class="table table-hover table-mc-light-blue">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Link</th>
+                        <th>Number of word</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Analysis</th>
+                    </tr>
+                </thead>
+                <tbody> <!--url이 추가될 때마다 테이블 수가 늘어날 수 있도록 for문으로 구현-->
+                    {% for url in datas %} 
+                    {% set index = datas.index(url) %}
+                    <tr>
+                        <td data-title="ID">{{index + 1}}</td>
+                        <td data-title="Link">{{url['url']}}</td>
+                        <td data-title="Number of word">{{url['word']}}</td>
+                        <td data-title="Time">{{url['time']}}</td>
+                        <td data-title="Status">{{url['status']}}</td>
+                        <td data-title="Analysis">
+                            <input type='hidden' id='urlname{{index}}' value={{url['url']}}>
+                            <input type="button" class="btn btn-site" onclick="showPopup_word({{index}})" value="Word">
+                            <input type="button" class="btn btn-site" onclick="showPopup_site({{index}})" value="Site">
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</body>
+</html>
