@@ -74,19 +74,29 @@
                     </tr>
                 </thead>
                 <tbody> <!--url이 추가될 때마다 테이블 수가 늘어날 수 있도록 for문으로 구현-->
-                    {% for url in datas %} 
+                    {% for url in datas %}
+            <input type='hidden' id='urlname{{index}}' value={{url['word']}}>
                     {% set index = datas.index(url) %}
                     <tr>
                         <td data-title="ID">{{index + 1}}</td>
                         <td data-title="Link">{{url['url']}}</td>
                         <td data-title="Number of word">{{url['word']}}</td>
                         <td data-title="Time">{{url['time']}}</td>
-                        <td data-title="Status">{{url['status']}}</td>
+                        <td data-title="Status">
+                {%if url['status'] == 'Fail' %} <sapn style="color : red;"><b>Fail</b></span>
+                {%elif url['status'] == 'Repeated' %} <sapn style="color : #FFD700;"><b>Repeated</b></span>
+                {%else%} <sapn style="color : BLUE;"><b>Success</b></span>
+                {% endif %}
+            </td>
                         <td data-title="Analysis">
+                {%if url['word'] == -1 %} <sapn>can't use Analysis</span>
+                {% else %}
                             <input type='hidden' id='urlname{{index}}' value={{url['url']}}>
                             <input type="button" class="btn btn-site" onclick="showPopup_word({{index}})" value="Word">
-                            <input type="button" class="btn btn-site" onclick="showPopup_site({{index}})" value="Site">
-                        </td>
+                            <input type="button" class="btn btn-site" onclick="showPopup_site({{index}})" value="Site">                          
+                {% endif %}
+            </td>
+                
                     </tr>
                     {%endfor%}
                 </tbody>
