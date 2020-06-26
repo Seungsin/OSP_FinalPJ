@@ -39,15 +39,18 @@ def upload_file():
                         url = url.replace("\n", "")
                         if url == "":
                                 break
-                        flag = True
+                        url_list.append(url)
+                       
+                for url in url_list:
+                        flag = False
                         for data in data_list:
-                                if url == data['url']:
+                                if url == data['url']: # 중복 url 존재
                                         data['status'] = 'Repeated'
-                                        flag = False # 중복 url 존재
+                                        flag = True
                                         break
                         if flag:
-                                url_list.append(url)
-                for url in url_list:
+                                continue
+
                         start = time.time()
                         wordfreq = Analysis.upload(url)
                         if wordfreq == -1: # 크롤링 실패
@@ -57,29 +60,29 @@ def upload_file():
                                         'word' : -1,
                                         'status' : 'Fail' })
                                 continue
-                        
+                       
                         cnt = 0
                         for c in wordfreq.values():
                                 cnt += c
                         end = time.time()
                         data_list.append({
                                 'url' : url,
-                                'time' : end - start,
+                                'time' : format(end - start, ".2f"),
                                 'word' : cnt,
                                 'status' : 'Success' })
-                
+               
                 return render_template('Analysis_result_main.html', datas = data_list)
-        
+       
         else:
                 url = request.args.get('search')
                 url = url.replace("%3A", ":")
                 url = url.replace("%2F", "/")
 
                 for data in data_list:
-                        if url == data['url']:
+                        if url == data['url']: # 중복 url 존재
                                 data['status'] = 'Repeated'
-                                return render_template('Analysis_result_main.html', datas = data_list) # 중복 url 존재
-                
+                                return render_template('Analysis_result_main.html', datas = data_list)
+               
                 start = time.time()
                 wordfreq = Analysis.upload(url)
                 if wordfreq == -1: # 크롤링 실패
@@ -89,7 +92,7 @@ def upload_file():
                                 'word' : -1,
                                 'status' : 'Fail' })
                         return render_template('Analysis_result_main.html', datas = data_list)
-                        
+                       
                 cnt = 0
                 for c in wordfreq.values():
                         cnt += c
@@ -98,12 +101,12 @@ def upload_file():
 
                 data_list.append({
                         'url' : url,
-                        'time' : proc_time,
+                        'time' : format(proc_time, ".2f"),
                         'word' : cnt ,
-                        'status' : 'Success' })        
+                        'status' : 'Success' })       
 
                 return render_template('Analysis_result_main.html', datas = data_list)
-        
+       
 @first_python.route('/getKeywords', methods=['POST'])
 def getKeywords():
         url = request.form['urlName']
@@ -111,31 +114,36 @@ def getKeywords():
         url = url.replace("%2F", "/")
         print(url)
         tf_idf = Analysis.tf_idf(url)
-        Keywords = sorted(tf_idf.items(), reverse=True, key=operator.itemgetter(1))
-        
-        return render_template('showPopup_word.html', keywords = Keywords[0:10])
+        keywords = sorted(tf_idf.items(), reverse=True, key=operator.itemgetter(1))
+        Keywords = []
+        for word in keywords[0:10]:
+                Keywords.append((word[0], format(word[1], ".6f")))
+               
+        return render_template('showPopup_word.html', keywords = Keywords)
 
 @first_python.route('/getSimilar', methods=['POST'])
 def getSimilar():
         url = request.form['urlName']
         url = url.replace("%3A", ":")
         url = url.replace("%2F", "/")
-        print(url)
-        similarity = []
+        Similarity = []
         urf_data = Analysis.es.search(index='word_freq', body={'query':{'match_all':{}}})
         data = urf_data['hits']['hits']
-        
+       
         for target in data:
                 if url == target['_id']:
                         continue
-                similarity.append((target['_id'], Analysis.cos_sim(url, target['_id'])))
-        similarity = sorted(similarity, key=operator.itemgetter(1), reverse=True)
-        
+                Similarity.append((target['_id'], Analysis.cos_sim(url, target['_id'])))
+        Similarity = sorted(Similarity, key=operator.itemgetter(1), reverse=True)
+        similarity = []
+        for cossim in Similarity:
+                similarity.append((cossim[0], format(cossim[1], ".6f")))
+        if(len(similarity) == 0): similarity.append("None")
         if(len(similarity) < 3):
                 return render_template("showPopup_site.html", similars = similarity)
-        
+       
         else:
                 return render_template("showPopup_site.html", similars = similarity[:3])
-        
+       
 if __name__ == '__main__':
         first_python.run(host='127.0.0.1', port=5000, debug=True)
