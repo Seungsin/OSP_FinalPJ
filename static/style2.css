@@ -1,0 +1,182 @@
+﻿:root {
+    font-size: calc(16px + (24 - 16)*(100vw - 320px)/(1920 - 320));
+}
+
+.click_please {
+    color:aliceblue;
+    text-align: center;
+}
+
+.for_center{
+    height:20%;
+    width:100%;
+}
+
+#section-3 button, #section-3 input {
+    font: 1em Hind, sans-serif;
+    line-height: 1.5em;
+}
+
+input {
+    color: #7A7378;
+}
+
+.search-bar {
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    align-content:center;
+}
+
+.search-bar input,
+.search-btn,
+.search-btn:before,
+.search-btn:after {
+    transition: all 0.25s ease-out;
+}
+
+.search-bar input,
+.search-btn {
+    width: 3em;
+    height: 3em;
+}
+
+    .search-bar input:invalid:not(:focus),
+    .search-btn {
+        cursor: pointer;
+    }
+
+    .search-bar,
+    .search-bar input:focus,
+    .search-bar input:valid {
+        width: 100%;
+    }
+
+        .search-bar input:focus,
+        .search-bar input:not(:focus) + .search-btn:focus {
+            outline: transparent;
+        }
+
+.search-bar {
+    margin: auto;
+    padding: 1.5em;
+    justify-content: center;
+    max-width: 30em;
+}
+
+    .search-bar input {
+        background: transparent;
+        border-radius: 1.5em;
+        box-shadow: 0 0 0 0.4em white inset;
+        padding: 0.75em;
+        transform: translate(0.5em,0.5em) scale(0.5);
+        transform-origin: 100% 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+        .search-bar input::-webkit-search-decoration {
+            -webkit-appearance: none;
+        }
+
+        .search-bar input:focus,
+        .search-bar input:valid {
+            background: #DBDCDD;/*bar 색상 지정*/
+            border-radius: 0.375em 0 0 0.375em;
+            box-shadow: 0 0 0 0.1em #d9d9d9 inset;
+            transform: scale(1);
+        }
+
+.search-btn {
+    background: white; /*막대기 색 지정*/
+    border-radius: 0 0.75em 0.75em 0 / 0 1.5em 1.5em 0;
+    padding: 0.75em;
+    position: relative;
+    transform: translate(0.25em,0.25em) rotate(45deg) scale(0.25,0.125);
+    transform-origin: 0 50%;
+}
+
+    .search-btn:before,
+    .search-btn:after {
+        content: "";
+        display: block;
+        opacity: 0;
+        position: absolute;
+    }
+
+    .search-btn:before {
+        border-radius: 50%;
+        box-shadow: 0 0 0 0.2em #f1f1f1 inset;/*bar 열리고 동그란거 색*/
+        top: 0.75em;
+        left: 0.75em;
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .search-btn:after {
+        background: #f1f1f1;/*bar 열리고 막대 색*/
+        border-radius: 0 0.25em 0.25em 0;
+        top: 51%;
+        left: 51%;
+        width: 0.75em;
+        height: 0.25em;
+        transform: translate(0.2em,0) rotate(45deg);
+        transform-origin: 0 50%;
+    }
+
+    .search-btn span {
+        display: inline-block;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+    }
+
+/* Active state */
+.search-bar input:focus + .search-btn,
+.search-bar input:valid + .search-btn {
+    background: #3D3B3E;/*bar열리고 버튼 색*/
+    border-radius: 0 0.375em 0.375em 0;
+    transform: scale(1);
+}
+
+    .search-bar input:focus + .search-btn:before,
+    .search-bar input:focus + .search-btn:after,
+    .search-bar input:valid + .search-btn:before,
+    .search-bar input:valid + .search-btn:after {
+        opacity: 1;
+    }
+
+    .search-bar input:focus + .search-btn:hover,
+    .search-bar input:valid + .search-btn:hover,
+    .search-bar input:valid:not(:focus) + .search-btn:focus {
+        background: #9FC2CB;/*버튼에 마우스 가져가면 색*/
+    }
+
+    .search-bar input:focus + .search-btn:active,
+    .search-bar input:valid + .search-btn:active {
+        transform: translateY(1px);
+    }
+
+@media screen and (prefers-color-scheme: dark) {
+    body, input {
+        color: #7A7378;
+    }
+
+    body {
+        background: #7A7378;
+    }
+
+    .search-bar input {
+        box-shadow: 0 0 0 0.4em #7A7378 inset;
+    }
+
+        .search-bar input:focus,
+        .search-bar input:valid {
+            background: #9FC2CB;
+            box-shadow: 0 0 0 0.1em #3d3d3d inset;
+        }
+
+    .search-btn {
+        background: #f1f1f1;
+    }
+}

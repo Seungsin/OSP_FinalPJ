@@ -1,0 +1,167 @@
+﻿* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.click_please{
+    text-align:center;
+}
+
+.for_upload {
+    height:60%;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#section-4 input, #section-4 button {
+    font: 1em Hind, sans-selif;
+    line-height: 1.5em;
+}
+
+#section-4 input {
+    color: #7A7378
+}
+
+.file_input_text_div {
+    display: flex;
+}
+
+.file_input i {
+    color: #DBDCDD;
+}
+
+.file_input_text_div,
+.upload_btn,
+.upload_btn:before,
+.upload_btn:after {
+    transition: all 0.25s ease-out;
+}
+
+.upload-btn {
+    width: 150px;
+    height: 60px;
+    text-align: center;
+    margin-left:-23px;
+}
+
+.file_input_div {
+    margin: auto;
+    justify-content: center;
+    max-width: 10em;
+}
+
+.file_input label {
+    width: 5em;
+    height: 5em;
+    cursor: pointer;
+    margin-left: 50px;
+}
+
+.file_input input {
+    display: none;
+}
+
+.material-Icons:after {
+    display: none;
+}
+
+.upload-btn {
+    background: transparent;
+    border-radius: 1.5em;
+    padding: 0.75em;
+    transform: translate(0.5em, 0.5em) scale(0.5);
+    transform-origin: 100% 0;
+    margin-left:-2px;
+}
+
+#file_input_text_div input {
+    color: white;
+    background: transparent;
+    text-align: center;
+}
+
+button {
+    outline: none;
+    height: 60px;
+    text-align: center;
+    width: 150px;
+    border-radius: 40px;
+    background: #fff;
+    border: 2px solid #D7E9EE;
+    color: #D7E9EE;
+    letter-spacing: 1px;
+    text-shadow: 0;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+}
+
+    button:hover {
+        color: #9FC2CB;
+        background: #D7E9EE;
+    }
+
+    button:active {
+        letter-spacing: 2px;
+    }
+
+
+.onclic {
+    width: 40px;
+    border-color: #bbbbbb;
+    border-width: 3px;
+    font-size: 0;
+    border-left-color: #1ECD97;
+    -webkit-animation: rotating 2s 0.25s linear infinite;
+    animation: rotating 2s 0.25s linear infinite;
+}
+
+    .onclic:after {
+        content: "";
+    }
+
+    .onclic:hover {
+        color: #1ECD97;
+        background: white;
+    }
+
+.validate {
+    font-size: 13px;
+    color: white;
+    background: #1ECD97;
+}
+
+    .validate:after {
+        font-family: 'FontAwesome';
+        content: "\f00c";
+    }
+
+@-webkit-keyframes rotating {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotating {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

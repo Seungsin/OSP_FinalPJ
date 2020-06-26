@@ -1,0 +1,208 @@
+﻿﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style1.css" /><!--1,2페이지+메뉴 스타일-->
+    <link rel="stylesheet" href="style2.css"><!--3페이지 스타일-->
+    <link rel="stylesheet" type="text/css" href="style3.css"><!--4페이지 스타일-->
+    <!-- 우분투에서는 href={{url_for('static',filename='style1.css')}}" 로 바꿔야함 -->
+    <!-- 우분투에서는 href={{url_for('static',filename='style2.css')}}" 로 바꿔야함 -->
+    <!-- 우분투에서는 href={{url_for('static',filename='style3.css')}}" 로 바꿔야함 -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Tera&family=MuseoModerno:wght@600&family=Quicksand:wght@500&display=swap" rel="stylesheet"><!--File upload용 아이콘-->
+</head>
+
+<body>
+    <!--menu 구성-->
+    <ul id="nav">
+        <li><a href="#section-1" class="js-anchor-link">Main</a></li>
+        <li><a href="#section-2" class="js-anchor-link">Selection</a></li>
+        <li><a href="#section-3" class="js-anchor-link">Search URL</a></li>
+        <li><a href="#section-4" class="js-anchor-link">File Upload</a></li>
+    </ul>
+
+    <!--main page-->
+    <div id="section-1" class="section">
+        <p style="color:#DBDCDD; font-size:75px;  top: 20%; left: 50%;font-family: 'MuseoModerno', cursive;">Welcome our Analysis page!</p>
+        <p style="color:#9FC2CB; font-size:23px; font-family: 'Quicksand', sans-serif;">How to use it</p>
+        <p style="color:#bbb8bb; font-size:20px; font-family: 'Quicksand', sans-serif;">
+            When you enter url address or upload a file with url input, we analyze them and inform them of similarity, number of duplicate words, etc.
+            <br />
+            Press the start button to go to the second page. On the second page, you can choose between search and file to enter url.
+            <br />
+            Press each button to go to the appropriate page, which can be passed by entering the scroll of the mouse.
+            <br />
+            Of course, you can always come to the main screen through the back to main button.
+            <br />
+            This web page is designed to be submitted as the last project assignment of an open source programming lecture, a major course in the Department of
+            <br />
+            Global Software Convergence at Kyungpook National University, and informs us that there is no commercial purpose.
+            <br />
+            The design of the site was made by Lee Seung-shin, Kwon Soo-bin, and Kim Chan-sol, and the ownership also belongs to them.
+            <br />
+            You want more details, please contact us at 010-5554-8012.
+            <br />
+            I hope this site will have a good effect on you, and finish here writing about how to use it.
+            <br />
+            I would like to thank Professor Jeong Seol-young for leading the lecture and giving various opportunities through the assignment so far,
+            <br />
+            and pay tribute to the team members who have been with me on this assignment.
+            <br />
+            <br />
+        </p>
+        <p style="color:#bbb8bb; font-size:24px; font-family: 'Quicksand', sans-serif;">
+            If you want to start the analysis, press the next button.
+        </p>
+        <p style="color:#bbb8bb; font-size: 30px">&nbsp;</p>
+        <a href="#section-2" class="a_2">Start!</a>
+    </div>
+
+    <!--첨부 방식 선택 페이지-->
+    <div id="section-2" class="section">
+        <p style="color:#DBDCDD; font-size:80px; top: 25%; left: 50%; font-family: 'MuseoModerno', cursive;" align="center">Select the method!</p>
+        <div class="container">
+            <div class="item url"><a class="a_1" href="#section-3" target="_blank"><span>URL</span></a></div>
+            <div class="item file"><a class="a_1" href="#section-4" target="_blank"><span>FILE</span></a></div>
+        </div>
+    </div>
+
+    <!--URL 직접 입력 페이지-->
+    <div id="section-3" class="section">
+        <h1 style="color:#DBDCDD; font-family: 'Quicksand', sans-serif;">Search URL</h1>
+        <br />
+        <a href="#section-1" class="a_3">Back to Main</a>
+        <div class="for_center"></div>
+        <form action="./osp_final" method="get" class="search-bar">
+            <input type="search" name="search" id="searchbtn" pattern=".*\S.*" required>
+            <button class="search-btn" type="submit">
+                <span>Search</span>
+            </button>
+        </form>
+        <p class="click_please" id="clickthis">↑click me!</p>
+    </div>
+
+    <!--File Upload 페이지-->
+    <div id="section-4" class="section">
+        <h1 style="color:#DBDCDD; font-family: 'Quicksand', sans-serif;">File Upload</h1>
+        <br />
+        <a href="#section-1" class="a_3">Back to Main</a>
+        <form enctype="multipart/form-data" action="./osp_final" method="post" class="for_upload">
+            <div class="file_input_div">
+                <div class="file_input">
+                    <label class="image_input_button mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored">
+                        <i class="fas fa-cloud-upload-alt fa-5x"></i>
+                        <input id="file_input_file" class="none" type="file" name="file" />
+                    </label>
+                    <pre class="click_please" id="clickme"> ↑click me!</pre>
+                </div>
+                <div id="file_input_text_div" class="mdl-textfield mdl-js-textfield textfield-demo">
+                    <input class="file_input_text mdl-textfield__input" type="text" disabled readonly id="file_input_text" />
+                    <label class="mdl-textfield__label" for="file_input_text"></label>
+                </div>
+                <button class="upload-btn" type="submit" id="upload_btn">
+                    <span>Upload</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!--java script-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        /*for file upload*/
+        var fileInputTextDiv = document.getElementById("file_input_text_div");
+        var fileInput = document.getElementById("file_input_file");
+        var fileInputText = document.getElementById("file_input_text");
+        var uploadBtn = document.getElementById("upload_btn");
+        var clickment = document.getElementById("clickme");
+        var searchbtn = document.getElementById("searchbtn");
+        var clickment2 = document.getElementById("clickthis");
+        uploadBtn.style.display = 'none';
+
+        fileInput.addEventListener("change", changeInputText);
+        fileInput.addEventListener("change", changeState);
+        fileInput.addEventListener("change", btnDisplay);
+
+        searchbtn.onclick = function(){
+            clickment2.style.display = 'none';
+        }
+
+        function changeInputText() {
+            var str = fileInput.value;
+            var i;
+            if (str.lastIndexOf("\\")) {
+                i = str.lastIndexOf("\\") + 1;
+            } else if (str.lastIndexOf("/")) {
+                i = str.lastIndexOf("/") + 1;
+            }
+            fileInputText.value = str.slice(i, str.length);
+        }
+
+        function changeState() {
+            if (fileInputText.value.length != 0) {
+                if (!fileInputTextDiv.classList.contains("is-focused")) {
+                    fileInputTextDiv.classList.add("is-focused");
+                }
+            } else {
+                if (fileInputTextDiv.classList.contains("is-focused")) {
+                    fileInputTextDiv.classList.remove("is-focused");
+                }
+            }
+        }
+        function btnDisplay() {
+            if (fileInputText.onchange) {
+                clickment.style.display = 'none';
+                uploadBtn.style.display = 'block';
+            } else {
+                clickment.style.display = 'none';
+                uploadBtn.style.display = 'block';
+            }
+        }
+        /*
+Smooth scroll functionality for anchor links (animates the scroll
+rather than a sudden jump in the page)
+*/
+        $('.js-anchor-link').click(function (e) {
+            e.preventDefault();
+            var target = $($(this).attr('href'));
+            if (target.length) {
+                var scrollTo = target.offset().top;
+                $('body, html').animate({ scrollTop: scrollTo + 'px' }, 800);
+            }
+        });
+
+        $('.a_1').click(function (e) {
+            e.preventDefault();
+            var target = $($(this).attr('href'));
+            if (target.length) {
+                var scrollTo = target.offset().top;
+                $('body, html').animate({ scrollTop: scrollTo + 'px' }, 800);
+            }
+        });
+        $('.a_2').click(function (e) {
+            e.preventDefault();
+            var target = $($(this).attr('href'));
+            if (target.length) {
+                var scrollTo = target.offset().top;
+                $('body, html').animate({ scrollTop: scrollTo + 'px' }, 800);
+            }
+        });
+        $('.a_3').click(function (e) {
+            e.preventDefault();
+            var target = $($(this).attr('href'));
+            if (target.length) {
+                var scrollTo = target.offset().top;
+                $('body, html').animate({ scrollTop: scrollTo + 'px' }, 800);
+            }
+        });
+    </script>
+
+    <!-- Get jQuery down below so it can work properly -->
+    <!-- You can get any other version, it's just an example -->
+    <!-- Change the speed of the scroll in the JS file. Follow the instructions there -->
+
+</body>
+</html>
